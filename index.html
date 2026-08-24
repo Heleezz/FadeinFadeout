@@ -3,149 +3,409 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aprenda Fade In & Fade Out Interativo</title>
+  <title>Mastering Fade In & Fade Out | CSS & JS Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #6366f1;
-      --text: #f8fafc;
+      --bg-color: #0b0f19;
+      --card-bg: #161f30;
+      --card-border: #233148;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --btn-hover: #1e293b;
+      --code-bg: #0d1117;
+      --radius: 16px;
+      --transition-speed: 0.4s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
     }
 
     .container {
-      background: var(--card-bg);
-      padding: 2rem;
-      border-radius: 16px;
-      max-width: 500px;
+      max-width: 1000px;
       width: 100%;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    h1 { color: #a5b4fc; margin-top: 0; text-align: center; }
-
-    /* O elemento que sofrerá o efeito */
-    .preview-box {
-      height: 120px;
-      background: linear-gradient(135deg, #6366f1, #ec4899);
-      border-radius: 12px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin: 1.5rem 0;
-      /* O segredo do efeito suave fica aqui: */
-      transition: opacity 0.5s ease-in-out;
-      box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+      flex-direction: column;
+      gap: 2.5rem;
     }
 
-    .code-display {
-      background: #090d16;
-      padding: 0.8rem;
-      border-radius: 8px;
-      font-family: monospace;
-      color: #38bdf8;
+    /* Hero Section */
+    .hero {
       text-align: center;
-      margin-bottom: 1.5rem;
+      padding: 2rem 1rem;
     }
 
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      background: var(--card-border);
+      color: #a855f7;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Section Wrapper */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Playground Grid */
+    .playground-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .playground-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-stage {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px dashed var(--card-border);
+      border-radius: calc(var(--radius) - 4px);
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fade-target {
+      width: 180px;
+      height: 180px;
+      border-radius: 16px;
+      background: var(--primary-gradient);
+      box-shadow: 0 0 30px var(--accent-glow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      opacity: 1;
+      will-change: opacity;
+      transition: opacity var(--transition-speed) ease-in-out;
+      user-select: none;
+    }
+
+    .fade-target span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    /* Controls */
     .controls {
       display: flex;
-      gap: 10px;
+      flex-direction: column;
       justify-content: center;
-      margin-bottom: 1.5rem;
+      gap: 1.25rem;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
     }
 
     button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 10px 16px;
+      background: #1e293b;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 0.75rem 1rem;
       border-radius: 8px;
-      cursor: pointer;
       font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    button:hover { background: #4f46e5; transform: translateY(-2px); }
+    button:hover {
+      background: #2d3d54;
+      border-color: #6366f1;
+      transform: translateY(-2px);
+    }
 
-    .slider-container { text-align: center; }
+    button:active {
+      transform: translateY(0);
+    }
+
+    .slider-control {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
 
     input[type="range"] {
-      width: 80%;
-      accent-color: var(--accent);
+      width: 100%;
+      accent-color: #a855f7;
       cursor: pointer;
     }
+
+    /* Live Code Box */
+    .code-panel {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .code-keyword { color: #f472b6; }
+    .code-prop { color: #38bdf8; }
+    .code-val { color: #a3e635; }
+
+    /* Educational Table */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    td code {
+      font-family: 'Fira Code', monospace;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-yes { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .status-no { background: rgba(239, 68, 68, 0.15); color: #f87171; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>Efeito Fade In / Fade Out</h1>
-    <p>O efeito ocorre ao alterar a <strong>opacidade</strong> de um elemento ao longo do tempo.</p>
+    
+    <!-- Hero Section -->
+    <header class="hero">
+      <span class="badge">Front-End Architecture</span>
+      <h1>Fade In & Fade Out</h1>
+      <p>Aceleração via GPU, Compositor Layers e Interpolação de Transições no Pipeline de Renderização Moderno.</p>
+    </header>
 
-    <!-- Card de demonstração -->
-    <div id="target" class="preview-box">Elemento Interativo</div>
+    <!-- Interactive Playground -->
+    <main class="section-card">
+      <div class="section-title">
+        <span>🎮</span> Playground Interativo
+      </div>
+      
+      <div class="playground-grid">
+        <div class="demo-stage">
+          <div id="targetBox" class="fade-target">
+            <p>Target Box</p>
+            <span id="targetOpacityLabel">Opacity: 1.00</span>
+          </div>
+        </div>
 
-    <!-- Leitor de código em tempo real -->
-    <div id="codeDisplay" class="code-display">opacity: 1; transition: opacity 0.5s;</div>
+        <div class="controls">
+          <div class="button-group">
+            <button id="btnFadeIn">Fade In</button>
+            <button id="btnFadeOut">Fade Out</button>
+            <button id="btnToggle">Toggle</button>
+          </div>
 
-    <!-- Botões de ação -->
-    <div class="controls">
-      <button onclick="fadeIn()">Fade In</button>
-      <button onclick="fadeOut()">Fade Out</button>
-      <button onclick="toggleFade()">Alternar</button>
-    </div>
+          <div class="slider-control">
+            <div class="slider-header">
+              <label for="opacityRange">Opacidade Manual (0 a 1):</label>
+              <strong id="sliderValue">1.00</strong>
+            </div>
+            <input type="range" id="opacityRange" min="0" max="1" step="0.01" value="1">
+          </div>
 
-    <!-- Controle deslizante -->
-    <div class="slider-container">
-      <label for="opacitySlider">Ajuste Manual da Opacidade:</label><br/><br/>
-      <input type="range" id="opacitySlider" min="0" max="1" step="0.01" value="1" oninput="manualOpacity(this.value)">
-    </div>
+          <!-- Live Code Display -->
+          <div class="code-panel">
+            <span class="code-keyword">.fade-target</span> {<br>
+            &nbsp;&nbsp;<span class="code-prop">opacity</span>: <span class="code-val" id="cssOpacityVal">1.00</span>;<br>
+            &nbsp;&nbsp;<span class="code-prop">transition</span>: <span class="code-val">opacity 0.4s ease-in-out</span>;<br>
+            &nbsp;&nbsp;<span class="code-prop">will-change</span>: <span class="code-val">opacity</span>;<br>
+            }
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Educational Comparison Table -->
+    <section class="section-card">
+      <div class="section-title">
+        <span>📚</span> Comparativo de Renderização CSS
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Propriedade</th>
+              <th>Afeta Layout (Reflow)?</th>
+              <th>Responde a Eventos (DOM)?</th>
+              <th>Animável Suavemente?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>opacity: 0</code></td>
+              <td><span class="status-badge status-no">Não (Preserva espaço)</span></td>
+              <td><span class="status-badge status-yes">Sim (Requer pointer-events: none)</span></td>
+              <td><span class="status-badge status-yes">Sim (Hardware Accelerated)</span></td>
+            </tr>
+            <tr>
+              <td><code>visibility: hidden</code></td>
+              <td><span class="status-badge status-no">Não (Preserva espaço)</span></td>
+              <td><span class="status-badge status-no">Não</span></td>
+              <td><span class="status-badge status-no">Não (Passo discreto)</span></td>
+            </tr>
+            <tr>
+              <td><code>display: none</code></td>
+              <td><span class="status-badge status-yes">Sim (Remove da Árvore de Layout)</span></td>
+              <td><span class="status-badge status-no">Não</span></td>
+              <td><span class="status-badge status-no">Não (Sem estados intermediários)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </div>
 
   <script>
-    const target = document.getElementById('target');
-    const codeDisplay = document.getElementById('codeDisplay');
-    const slider = document.getElementById('opacitySlider');
+    document.addEventListener('DOMContentLoaded', () => {
+      const targetBox = document.getElementById('targetBox');
+      const opacityRange = document.getElementById('opacityRange');
+      const sliderValue = document.getElementById('sliderValue');
+      const cssOpacityVal = document.getElementById('cssOpacityVal');
+      const targetOpacityLabel = document.getElementById('targetOpacityLabel');
+      
+      const btnFadeIn = document.getElementById('btnFadeIn');
+      const btnFadeOut = document.getElementById('btnFadeOut');
+      const btnToggle = document.getElementById('btnToggle');
 
-    function fadeIn() {
-      target.style.opacity = '1';
-      updateUI('1');
-    }
+      function updateOpacity(value) {
+        const numericVal = parseFloat(value).toFixed(2);
+        
+        // Aplicação do estilo na DOM
+        targetBox.style.opacity = numericVal;
+        
+        // Atualização da UI e Code Panel
+        opacityRange.value = numericVal;
+        sliderValue.textContent = numericVal;
+        cssOpacityVal.textContent = numericVal;
+        targetOpacityLabel.textContent = `Opacity: ${numericVal}`;
+      }
 
-    function fadeOut() {
-      target.style.opacity = '0';
-      updateUI('0');
-    }
+      // Event Listeners dos Botões
+      btnFadeIn.addEventListener('click', () => {
+        updateOpacity(1);
+      });
 
-    function toggleFade() {
-      const isHidden = window.getComputedStyle(target).opacity === '0';
-      isHidden ? fadeIn() : fadeOut();
-    }
+      btnFadeOut.addEventListener('click', () => {
+        updateOpacity(0);
+      });
 
-    function manualOpacity(val) {
-      target.style.opacity = val;
-      updateUI(val);
-    }
+      btnToggle.addEventListener('click', () => {
+        const currentOpacity = parseFloat(targetBox.style.opacity || 1);
+        updateOpacity(currentOpacity > 0.5 ? 0 : 1);
+      });
 
-    function updateUI(val) {
-      codeDisplay.textContent = `opacity: ${val}; transition: opacity 0.5s;`;
-      slider.value = val;
-    }
+      // Event Listener do Slider (Input Range)
+      opacityRange.addEventListener('input', (e) => {
+        updateOpacity(e.target.value);
+      });
+    });
   </script>
 </body>
 </html>
