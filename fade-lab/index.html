@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Demonstração interativa dos efeitos Fade In e Fade Out em CSS." />
+  <title>Fade In & Fade Out — Playground Interativo</title>
+
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-mark">F</div>
+        <span>Fade<span class="gradient-text">Lab</span></span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#playground">Playground</a></li>
+        <li><a href="#code">Código</a></li>
+        <li><a href="#didactic">Conceitos</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-badge fade-up">
+        <span class="dot"></span>
+        <span>CSS · Animações · Performance</span>
+      </div>
+      <h1 class="fade-up delay-1">
+        Domine os efeitos de<br>
+        <span class="gradient-text">Fade In &amp; Fade Out</span>
+      </h1>
+      <p class="fade-up delay-2">
+        Uma exploração interativa sobre como a propriedade <code style="font-family: var(--font-mono); color: var(--accent-2);">opacity</code>
+        controla transições suaves entre visível e invisível — e por que ela é a escolha ideal para animações performáticas.
+      </p>
+      <a href="#playground" class="hero-cta fade-up delay-3">
+        Experimentar agora
+        <span>→</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- PLAYGROUND -->
+  <section id="playground">
+    <div class="container">
+      <div class="section-label">Playground Interativo</div>
+      <h2>Controle a opacidade em <span class="gradient-text">tempo real</span></h2>
+      <p style="color: var(--text-1); max-width: 640px; margin-bottom: 3rem;">
+        Use os botões para disparar animações ou arraste o slider para manipular o valor de opacidade manualmente. Observe o código CSS sendo atualizado ao vivo.
+      </p>
+
+      <div class="playground">
+        <!-- Coluna esquerda: Preview + Controles -->
+        <div class="card">
+          <div class="card-title">Preview</div>
+
+          <div class="preview-area">
+            <div class="fade-target" id="fadeTarget">
+              <span id="targetLabel">1.00</span>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="btn" id="btnFadeIn">
+              <span>↗</span> Fade In
+            </button>
+            <button class="btn" id="btnFadeOut">
+              <span>↘</span> Fade Out
+            </button>
+            <button class="btn primary" id="btnToggle">
+              <span>⇄</span> Toggle
+            </button>
+            <button class="btn" id="btnReset">
+              <span>↺</span> Reset
+            </button>
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <span class="slider-label">Opacidade manual</span>
+              <span class="slider-value" id="sliderValueDisplay">1.00</span>
+            </div>
+            <input type="range" id="opacitySlider" min="0" max="100" value="100" step="1" />
+          </div>
+        </div>
+
+        <!-- Coluna direita: Código Vivo -->
+        <div class="code-panel" id="code">
+          <div class="code-header">
+            <div class="code-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="code-filename">styles.css</span>
+            <button class="code-copy" id="btnCopy">Copiar</button>
+          </div>
+          <div class="code-body">
+            <pre id="codeOutput"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO DIDÁTICA -->
+  <section id="didactic">
+    <div class="container">
+      <div class="section-label">Conceitos Fundamentais</div>
+      <h2>opacity vs visibility vs <span class="gradient-text">display</span></h2>
+      <p style="color: var(--text-1); max-width: 720px;">
+        Embora todas possam "esconder" um elemento, elas se comportam de formas radicalmente diferentes no pipeline de renderização do navegador.
+      </p>
+
+      <div class="comparison-grid">
+        <!-- opacity -->
+        <div class="prop-card opacity-card">
+          <h3>opacity: 0</h3>
+          <p>Torna o elemento totalmente transparente, mas ele continua ocupando espaço e respondendo a eventos.</p>
+          <ul class="prop-features">
+            <li><span class="icon yes">✓</span> Mantém espaço no layout</li>
+            <li><span class="icon warn">!</span> Responde a cliques (use pointer-events: none)</li>
+            <li><span class="icon yes">✓</span> Animável suavemente (0 → 1)</li>
+            <li><span class="icon yes">✓</span> Processado na GPU (composite only)</li>
+          </ul>
+        </div>
+
+        <!-- visibility -->
+        <div class="prop-card visibility-card">
+          <h3>visibility: hidden</h3>
+          <p>Esconde o elemento visualmente sem removê-lo do fluxo do documento.</p>
+          <ul class="prop-features">
+            <li><span class="icon yes">✓</span> Mantém espaço no layout</li>
+            <li><span class="icon no">✕</span> Não responde a eventos</li>
+            <li><span class="icon no">✕</span> Transição discreta (sem interpolação)</li>
+            <li><span class="icon yes">✓</span> Herdado por elementos filhos</li>
+          </ul>
+        </div>
+
+        <!-- display -->
+        <div class="prop-card display-card">
+          <h3>display: none</h3>
+          <p>Remove completamente o elemento do fluxo do DOM e da árvore de renderização.</p>
+          <ul class="prop-features">
+            <li><span class="icon no">✕</span> Não ocupa espaço no layout</li>
+            <li><span class="icon no">✕</span> Não responde a eventos</li>
+            <li><span class="icon no">✕</span> Não pode ser animado</li>
+            <li><span class="icon warn">!</span> Força reflow ao ser alternado</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Propriedade</th>
+            <th>Afeta Layout?</th>
+            <th>Responde a Eventos?</th>
+            <th>Animável?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>opacity: 0</td>
+            <td><span class="pill no">Não</span></td>
+            <td><span class="pill partial">Sim*</span></td>
+            <td><span class="pill yes">Sim</span></td>
+          </tr>
+          <tr>
+            <td>visibility: hidden</td>
+            <td><span class="pill no">Não</span></td>
+            <td><span class="pill no">Não</span></td>
+            <td><span class="pill no">Não</span></td>
+          </tr>
+          <tr>
+            <td>display: none</td>
+            <td><span class="pill yes">Sim</span></td>
+            <td><span class="pill no">Não</span></td>
+            <td><span class="pill no">Não</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>Construído com HTML5, CSS3 e JavaScript Vanilla · <a href="#playground">Voltar ao topo</a></p>
+    </div>
+  </footer>
+
+  <!-- JS externo -->
+  <script src="script.js"></script>
+</body>
+</html>
