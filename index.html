@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aprenda Fade In & Fade Out Interativo</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --accent: #6366f1;
+      --text: #f8fafc;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    h1 { color: #a5b4fc; margin-top: 0; text-align: center; }
+
+    /* O elemento que sofrerá o efeito */
+    .preview-box {
+      height: 120px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+      /* O segredo do efeito suave fica aqui: */
+      transition: opacity 0.5s ease-in-out;
+      box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+    }
+
+    .code-display {
+      background: #090d16;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-family: monospace;
+      color: #38bdf8;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover { background: #4f46e5; transform: translateY(-2px); }
+
+    .slider-container { text-align: center; }
+
+    input[type="range"] {
+      width: 80%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Efeito Fade In / Fade Out</h1>
+    <p>O efeito ocorre ao alterar a <strong>opacidade</strong> de um elemento ao longo do tempo.</p>
+
+    <!-- Card de demonstração -->
+    <div id="target" class="preview-box">Elemento Interativo</div>
+
+    <!-- Leitor de código em tempo real -->
+    <div id="codeDisplay" class="code-display">opacity: 1; transition: opacity 0.5s;</div>
+
+    <!-- Botões de ação -->
+    <div class="controls">
+      <button onclick="fadeIn()">Fade In</button>
+      <button onclick="fadeOut()">Fade Out</button>
+      <button onclick="toggleFade()">Alternar</button>
+    </div>
+
+    <!-- Controle deslizante -->
+    <div class="slider-container">
+      <label for="opacitySlider">Ajuste Manual da Opacidade:</label><br/><br/>
+      <input type="range" id="opacitySlider" min="0" max="1" step="0.01" value="1" oninput="manualOpacity(this.value)">
+    </div>
+  </div>
+
+  <script>
+    const target = document.getElementById('target');
+    const codeDisplay = document.getElementById('codeDisplay');
+    const slider = document.getElementById('opacitySlider');
+
+    function fadeIn() {
+      target.style.opacity = '1';
+      updateUI('1');
+    }
+
+    function fadeOut() {
+      target.style.opacity = '0';
+      updateUI('0');
+    }
+
+    function toggleFade() {
+      const isHidden = window.getComputedStyle(target).opacity === '0';
+      isHidden ? fadeIn() : fadeOut();
+    }
+
+    function manualOpacity(val) {
+      target.style.opacity = val;
+      updateUI(val);
+    }
+
+    function updateUI(val) {
+      codeDisplay.textContent = `opacity: ${val}; transition: opacity 0.5s;`;
+      slider.value = val;
+    }
+  </script>
+</body>
+</html>
