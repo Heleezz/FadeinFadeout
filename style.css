@@ -64,13 +64,13 @@ h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin-bottom: 1rem; }
 /* NAVBAR */
 .navbar {
   position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(16px); background: rgba(10, 14, 23, 0.8);
+  backdrop-filter: blur(16px); background: rgba(10, 14, 23, 0.85);
   border-bottom: 1px solid var(--border);
 }
 .navbar .container { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; }
 .logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.05rem; }
 .logo-mark { width: 32px; height: 32px; border-radius: 10px; background: var(--gradient); display: grid; place-items: center; font-size: 0.9rem; }
-.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links { display: flex; gap: 1.8rem; list-style: none; }
 .nav-links a { color: var(--text-1); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
 .nav-links a:hover { color: var(--text-0); }
 
@@ -84,16 +84,14 @@ h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin-bottom: 1rem; }
 .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-1); box-shadow: 0 0 8px var(--accent-1); }
 .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; margin-bottom: 1.2rem; }
 .gradient-text { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
-.hero p { font-size: 1.1rem; color: var(--text-1); max-width: 650px; margin: 0 auto 2rem; }
+.hero p { font-size: 1.1rem; color: var(--text-1); max-width: 680px; margin: 0 auto 2rem; }
 .hero-cta {
   display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.6rem;
   background: var(--gradient); color: white; text-decoration: none; border-radius: var(--radius-md); font-weight: 600;
 }
 
 /* PRESETS */
-.preset-container {
-  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;
-}
+.preset-container { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
 .preset-label { font-size: 0.85rem; color: var(--text-1); font-weight: 500; }
 .btn-preset {
   background: var(--surface); border: 1px solid var(--border); color: var(--text-0);
@@ -142,9 +140,7 @@ h2 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); margin-bottom: 1rem; }
 }
 
 /* TELEMETRIA */
-.telemetry-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.2rem;
-}
+.telemetry-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.2rem; }
 .telemetry-card {
   background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border);
   padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); text-align: center;
@@ -210,6 +206,25 @@ input[type="range"] {
 }
 .log-header { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-2); text-transform: uppercase; margin-bottom: 0.5rem; }
 .log-list { list-style: none; font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-1); max-height: 100px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* ESTILOS DA SEÇÃO ESCOLAR */
+.school-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.5rem;
+}
+@media (max-width: 900px) { .school-grid { grid-template-columns: 1fr; } }
+
+.school-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.8rem; transition: transform 0.3s ease;
+}
+.school-card:hover { transform: translateY(-4px); border-color: var(--border-strong); }
+.school-card-icon { font-size: 2rem; margin-bottom: 1rem; }
+.school-card h3 { font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--text-0); }
+.school-card p { font-size: 0.88rem; color: var(--text-1); margin-bottom: 1rem; }
+
+.school-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.school-list li { font-size: 0.82rem; color: var(--text-1); line-height: 1.5; position: relative; padding-left: 1rem; }
+.school-list li::before { content: "•"; color: var(--accent-1); position: absolute; left: 0; font-weight: bold; }
 
 /* HIGHLIGHTING */
 .tok-prop { color: #7dd3fc; }

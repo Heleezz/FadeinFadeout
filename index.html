@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Simulador interativo de aquecimento de piscina usando transições de opacidade em CSS." />
-  <title>PoolHeat Lab — Simulador Avançado de Aquecimento</title>
+  <meta name="description" content="Simulador interativo de aquecimento de piscina e laboratório de automação CSS/STEM para ambiente escolar." />
+  <title>PoolHeat Lab — Automação, STEM & Aquecimento Escolar</title>
 
+  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,13 +20,14 @@
     <div class="container">
       <div class="logo">
         <div class="logo-mark">🔥</div>
-        <span>Pool<span class="gradient-text">Heat</span> <small class="version-tag">v2.0</small></span>
+        <span>Pool<span class="gradient-text">Heat</span> <small class="version-tag">v3.0 Edu</small></span>
       </div>
       <ul class="nav-links">
         <li><a href="#playground">Simulador</a></li>
         <li><a href="#telemetry">Telemetria</a></li>
-        <li><a href="#code">Código CSS</a></li>
-        <li><a href="#didactic">Conceitos</a></li>
+        <li><a href="#escola">Impacto Escolar</a></li>
+        <li><a href="#didactic">Conceitos CSS</a></li>
+        <li><a href="#code">Código</a></li>
       </ul>
     </div>
   </nav>
@@ -35,18 +37,18 @@
     <div class="container">
       <div class="hero-badge fade-up">
         <span class="dot"></span>
-        <span>Automação · Inércia Térmica · Telemetria em Tempo Real</span>
+        <span>Automação Escolar · Educação STEM · Eficiência Energética</span>
       </div>
       <h1 class="fade-up delay-1">
-        Simulador de Aquecimento:<br>
-        <span class="gradient-text">Fade In &amp; Fade Out</span>
+        Aquecimento de Piscina,<br>
+        <span class="gradient-text">Fade CSS &amp; Educação STEM</span>
       </h1>
       <p class="fade-up delay-2">
         Aprenda como a propriedade <code style="font-family: var(--font-mono); color: var(--accent-2);">opacity</code> 
-        simula o ciclo térmico, consumo de energia e retração de calor com capas térmicas.
+        simula a inércia térmica de uma piscina e entenda o impacto direto do controle de temperatura no ambiente escolar.
       </p>
       <a href="#playground" class="hero-cta fade-up delay-3">
-        Iniciar Simulação
+        Explorar Simulador
         <span>→</span>
       </a>
     </div>
@@ -56,32 +58,32 @@
   <section id="playground">
     <div class="container">
       <div class="section-label">Painel de Controle Térmico</div>
-      <h2>Simule a temperatura e <span class="gradient-text">telemetria</span></h2>
+      <h2>Simule a temperatura e <span class="gradient-text">telemetria escolar</span></h2>
       <p style="color: var(--text-1); max-width: 640px; margin-bottom: 2.5rem;">
-        Selecione um modo de uso rápido, ative a capa térmica para alterar a velocidade do Fade Out ou controle a potência manualmente.
+        Selecione um modo de uso rápido escolar, ative a capa térmica para otimizar o consumo noturno ou controle a potência manualmente.
       </p>
 
       <!-- PRESETS RÁPIDOS -->
       <div class="preset-container">
-        <span class="preset-label">Modos Rápidos:</span>
+        <span class="preset-label">Modos Rápidos Escolares:</span>
         <button class="btn-preset" data-temp="20">
-          <span>❄️</span> Econômico (20°C)
+          <span>❄️</span> Repouso / Férias (20°C)
         </button>
-        <button class="btn-preset" data-temp="26">
-          <span>🏊</span> Natação (26°C)
+        <button class="btn-preset" data-temp="27">
+          <span>🏊</span> Natação & Treino (27°C)
         </button>
-        <button class="btn-preset" data-temp="29">
-          <span>☀️</span> Conforto (29°C)
+        <button class="btn-preset" data-temp="30">
+          <span>♿</span> Hidroterapia & Inclusão (30°C)
         </button>
         <button class="btn-preset" data-temp="32">
-          <span>♨️</span> Spa / Hydro (32°C)
+          <span>♨️</span> Aquecimento Máximo (32°C)
         </button>
       </div>
 
       <div class="playground">
         <!-- Coluna esquerda: Preview + Controles -->
         <div class="card">
-          <div class="card-title">Piscina — Visão Térmica</div>
+          <div class="card-title">Piscina Escolar — Visão Térmica</div>
 
           <div class="preview-area" id="previewArea">
             <div class="water-waves"></div>
@@ -91,14 +93,14 @@
             </div>
           </div>
 
-          <!-- MÉTRAMAS DE TELEMETRIA -->
+          <!-- MÉTRICAS DE TELEMETRIA -->
           <div class="telemetry-grid" id="telemetry">
             <div class="telemetry-card">
               <span class="telemetry-title">Consumo Estimado</span>
               <span class="telemetry-value" id="valConsumo">6.0 kW</span>
             </div>
             <div class="telemetry-card">
-              <span class="telemetry-title">Eficiência Térmica</span>
+              <span class="telemetry-title">Eficiência Escolar</span>
               <span class="telemetry-value" id="valEficiencia">95%</span>
             </div>
             <div class="telemetry-card">
@@ -109,7 +111,7 @@
 
           <div class="controls">
             <button class="btn" id="btnFadeIn">
-              <span>🔥</span> Ligar (Fade In)
+              <span>🔥</span> Ligar Bomba (Fade In)
             </button>
             <button class="btn" id="btnFadeOut">
               <span>❄️</span> Desligar (Fade Out)
@@ -126,14 +128,14 @@
               <span class="switch-slider"></span>
             </label>
             <div class="toggle-info">
-              <strong>Capa Térmica Aplicada</strong>
-              <small style="color: var(--text-2); display: block;">Aumenta o tempo de transição (Fade Out mais lento/suave)</small>
+              <strong>Capa Térmica Escolar Instalada</strong>
+              <small style="color: var(--text-2); display: block;">Retém 70% da evaporação noturna (Fade Out suave/lento)</small>
             </div>
           </div>
 
           <div class="slider-group">
             <div class="slider-header">
-              <span class="slider-label">Potência da Bomba (Modo ECO)</span>
+              <span class="slider-label">Potência das Bombas (Modo ECO Escolar)</span>
               <span class="slider-value" id="sliderValueDisplay">100% (1.00)</span>
             </div>
             <input type="range" id="opacitySlider" min="0" max="100" value="100" step="1" />
@@ -157,9 +159,9 @@
 
           <!-- LOG DE EVENTOS -->
           <div class="log-panel">
-            <div class="log-header">Histórico do Sistema</div>
+            <div class="log-header">Histórico do Sistema Escolar</div>
             <ul class="log-list" id="logList">
-              <li>[00:00] Sistema inicializado em 32.0°C.</li>
+              <li>[00:00] Sistema de automação escolar iniciado.</li>
             </ul>
           </div>
         </div>
@@ -167,11 +169,66 @@
     </div>
   </section>
 
-  <!-- SEÇÃO DIDÁTICA -->
+  <!-- NOVA SEÇÃO: IMPACTO NO AMBIENTE ESCOLAR & STEM -->
+  <section id="escola">
+    <div class="container">
+      <div class="section-label">Aplicações Pedagógicas &amp; Gestão</div>
+      <h2>O Impacto do Aquecimento no <span class="gradient-text">Ambiente Escolar</span></h2>
+      <p style="color: var(--text-1); max-width: 720px; margin-bottom: 2.5rem;">
+        A infraestrutura aquecida transcende a educação física: ela se torna um laboratório multidisciplinar de física, tecnologia e inclusão.
+      </p>
+
+      <div class="school-grid">
+        <!-- CARD 1: APRENDIZAGEM STEM -->
+        <div class="school-card">
+          <div class="school-card-icon">🔬</div>
+          <h3>Laboratório Vivo (STEM &amp; IoT)</h3>
+          <p>
+            Alunos aprendem conceitos complexos de física e tecnologia diretamente no complexo aquático:
+          </p>
+          <ul class="school-list">
+            <li><strong>Física &amp; Termodinâmica:</strong> Estudo prático de convecção, inércia térmica e cálculo de calor específico.</li>
+            <li><strong>Robótica &amp; Programação:</strong> Desenvolvimento de rotinas de sensores IoT que controlam a opacidade da interface gráfica do painel.</li>
+            <li><strong>Ciências Ambientais:</strong> Comparativo da pegada de carbono entre coletores solares e bombas elétricas.</li>
+          </ul>
+        </div>
+
+        <!-- CARD 2: SAÚDE & INCLUSÃO -->
+        <div class="school-card">
+          <div class="school-card-icon">🏊</div>
+          <h3>Saúde, Calendário &amp; Inclusão</h3>
+          <p>
+            O controle térmico contínuo garante benefícios diretos à comunidade escolar ao longo de todo o ano letivo:
+          </p>
+          <ul class="school-list">
+            <li><strong>Calendário Sem Interrupções:</strong> Aulas de natação mantidas nos meses frios, evitando perda do ritmo de treino.</li>
+            <li><strong>Faixa Esportiva (26°C a 28°C):</strong> Temperatura ideal para alto rendimento dos times sem fadiga pelo calor.</li>
+            <li><strong>Hidroterapia &amp; Acessibilidade (29°C a 31°C):</strong> Água morna para alunos com deficiência motora, dores articulares ou reabilitação.</li>
+          </ul>
+        </div>
+
+        <!-- CARD 3: SUSTENTABILIDADE OPERACIONAL -->
+        <div class="school-card">
+          <div class="school-card-icon">🌱</div>
+          <h3>Sustentabilidade &amp; Custos</h3>
+          <p>
+            A automação inteligente protege os recursos financeiros e energéticos da instituição de ensino:
+          </p>
+          <ul class="school-list">
+            <li><strong>Retenção Térmica (Capa Noturna):</strong> A evaporação responde por 70% da perda de calor. A capa evita o reaquecimento do zero pela manhã.</li>
+            <li><strong>Inércia Térmica em CSS:</strong> Assim como no Fade In, o aquecimento gradual previne picos na conta de energia da escola.</li>
+            <li><strong>Matriz Híbrida:</strong> Combinação de placas solares térmicas no telhado com bombas de calor elétricas.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO DIDÁTICA CSS -->
   <section id="didactic">
     <div class="container">
-      <div class="section-label">Conceitos Aplicados ao Sistema</div>
-      <h2>opacity vs visibility vs <span class="gradient-text">display</span> no Aquecimento</h2>
+      <div class="section-label">Conceitos Técnicos CSS</div>
+      <h2>opacity vs visibility vs <span class="gradient-text">display</span> no Painel</h2>
 
       <div class="comparison-grid">
         <div class="prop-card opacity-card">
@@ -209,7 +266,7 @@
 
   <footer>
     <div class="container">
-      <p>PoolHeat Lab v2.0 · Automação e Transições CSS · <a href="#playground">Voltar ao topo</a></p>
+      <p>PoolHeat Lab v3.0 Edu · Automação, Educação STEM e Transições CSS · <a href="#playground">Voltar ao topo</a></p>
     </div>
   </footer>
 

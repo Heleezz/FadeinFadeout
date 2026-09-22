@@ -37,38 +37,39 @@ function addLog(msg) {
  */
 function updateTransitionSpeed() {
   const temCapa = chkCapaTermica.checked;
-  // Capa térmica mantém o calor: transição de resfriamento é mais longa (3.0s)
   transitionDurationSec = temCapa ? 3.0 : 1.0;
   fadeTarget.style.transition = `opacity ${transitionDurationSec}s ease-in-out`;
 }
 
 /**
- * Mapeia opacidade para temperatura, consumo elétrico e telemetria
+ * Mapeia opacidade para temperatura, consumo elétrico e telemetria escolar
  */
 function applyOpacity(value) {
   currentOpacity = Math.max(0, Math.min(1, value));
 
-  // Aplica transparência
   fadeTarget.style.opacity = currentOpacity;
 
-  // Cálculos de Telemetria
+  // Cálculo da temperatura e telemetria
   const temp = (20 + currentOpacity * 12).toFixed(1);
   const consumoKW = (currentOpacity * 6.0).toFixed(1);
   const eficiencia = chkCapaTermica.checked ? Math.round(85 + currentOpacity * 12) : Math.round(60 + currentOpacity * 20);
   const tempoMin = Math.round((1 - currentOpacity) * 45);
 
-  // Atualização Visual
+  // Labels
   targetLabel.textContent = `${temp}°C`;
   valConsumo.textContent = `${consumoKW} kW`;
   valEficiencia.textContent = `${eficiencia}%`;
   valTempo.textContent = `${tempoMin} min`;
 
+  // Status pedagógico/esportivo
   if (currentOpacity >= 0.8) {
-    statusLabel.textContent = "Aquecimento Máximo";
-  } else if (currentOpacity >= 0.3) {
-    statusLabel.textContent = "Modo ECO / Manutenção";
+    statusLabel.textContent = "Aquecimento Máximo / Spa";
+  } else if (currentOpacity >= 0.7) {
+    statusLabel.textContent = "Hidroterapia & Inclusão";
+  } else if (currentOpacity >= 0.4) {
+    statusLabel.textContent = "Treino & Natação Escolar";
   } else {
-    statusLabel.textContent = "Água Fria / Repouso";
+    statusLabel.textContent = "Modo Repouso / Férias";
   }
 
   const percentage = Math.round(currentOpacity * 100);
@@ -79,29 +80,29 @@ function applyOpacity(value) {
 }
 
 /**
- * Renderiza o código CSS adaptado com os parâmetros ativos
+ * Renderiza o código CSS no painel
  */
 function renderCode(currentTemp) {
   const opacity = currentOpacity.toFixed(2);
   const duration = `${transitionDurationSec.toFixed(1)}s`;
 
   const rawCode =
-`/* Circuito de Aquecimento — PoolHeat v2.0 */
-.circuito-termico {
+`/* Automação do Parque Aquático Escolar */
+.piscina-escolar {
   opacity: ${opacity}; /* Temp: ${currentTemp}°C */
   transition: opacity ${duration} ease-in-out;
   will-change: opacity;
 }`;
 
   const highlighted =
-`<span class="tok-com">/* Circuito Térmico — Temp: ${currentTemp}°C */</span>
-<span class="tok-sel">.circuito-termico</span> <span class="tok-punc">{</span>
+`<span class="tok-com">/* Parque Aquático Escolar — Temp: ${currentTemp}°C */</span>
+<span class="tok-sel">.piscina-escolar</span> <span class="tok-punc">{</span>
   <span class="tok-prop">opacity</span><span class="tok-punc">:</span> <span class="tok-num">${opacity}</span><span class="tok-punc">;</span>
   <span class="tok-prop">transition</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span> <span class="tok-num">${duration}</span> <span class="tok-val">ease-in-out</span><span class="tok-punc">;</span>
   <span class="tok-prop">will-change</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span><span class="tok-punc">;</span>
 <span class="tok-punc">}</span>
 
-<span class="tok-com">/* Capa Térmica: ${chkCapaTermica.checked ? 'Ativa (Perda lenta)' : 'Inativa (Perda rápida)'} */</span>`;
+<span class="tok-com">/* Capa Térmica Escolar: ${chkCapaTermica.checked ? 'Ativa (3.0s Fade Out)' : 'Inativa (1.0s Fade Out)'} */</span>`;
 
   codeOutput.innerHTML = highlighted;
   btnCopy.dataset.raw = rawCode;
@@ -134,7 +135,7 @@ function animateOpacity(from, to) {
 
 /* LISTENERS DE EVENTOS */
 
-// Presets Rápidos
+// Presets Rápidos Escolares
 document.querySelectorAll('.btn-preset').forEach(btn => {
   btn.addEventListener('click', (e) => {
     document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
@@ -144,7 +145,7 @@ document.querySelectorAll('.btn-preset').forEach(btn => {
     const targetTemp = parseFloat(targetBtn.dataset.temp);
     const targetOpacity = (targetTemp - 20) / 12;
 
-    addLog(`Preset selecionado: ${targetTemp}°C`);
+    addLog(`Preset escolar acionado: ${targetTemp}°C`);
     updateTransitionSpeed();
     animateOpacity(currentOpacity, targetOpacity);
   });
@@ -154,7 +155,7 @@ document.querySelectorAll('.btn-preset').forEach(btn => {
 chkCapaTermica.addEventListener('change', () => {
   const estaAtiva = chkCapaTermica.checked;
   updateTransitionSpeed();
-  addLog(`Capa térmica ${estaAtiva ? 'aplicada' : 'removida'}.`);
+  addLog(`Capa térmica ${estaAtiva ? 'colocada na piscina' : 'recolhida'}.`);
   applyOpacity(currentOpacity);
 });
 
@@ -166,18 +167,18 @@ opacitySlider.addEventListener('input', (e) => {
 
 opacitySlider.addEventListener('change', () => {
   updateTransitionSpeed();
-  addLog(`Potência ajustada manualmente para ${Math.round(currentOpacity * 100)}%`);
+  addLog(`Potência manual ajustada para ${Math.round(currentOpacity * 100)}%`);
 });
 
 // Botões principais
 btnFadeIn.addEventListener('click', () => {
-  addLog('Comando: Ligar Aquecedor (Fade In)');
+  addLog('Comando: Ligar Bombas (Fade In)');
   updateTransitionSpeed();
   animateOpacity(currentOpacity, 1);
 });
 
 btnFadeOut.addEventListener('click', () => {
-  addLog('Comando: Desligar Aquecedor (Fade Out)');
+  addLog('Comando: Desligar Bombas (Fade Out)');
   updateTransitionSpeed();
   animateOpacity(currentOpacity, 0);
 });
