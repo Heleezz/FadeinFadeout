@@ -1,10 +1,7 @@
-/* =========================================================
-   LÓGICA DO PLAYGROUND
-   ========================================================= */
-
-// Referências aos elementos DOM
+// Elementos DOM
 const fadeTarget       = document.getElementById('fadeTarget');
 const targetLabel      = document.getElementById('targetLabel');
+const statusLabel      = document.getElementById('statusLabel');
 const opacitySlider    = document.getElementById('opacitySlider');
 const sliderValueDisp  = document.getElementById('sliderValueDisplay');
 const codeOutput       = document.getElementById('codeOutput');
@@ -14,74 +11,79 @@ const btnToggle        = document.getElementById('btnToggle');
 const btnReset         = document.getElementById('btnReset');
 const btnCopy          = document.getElementById('btnCopy');
 
-// Estado atual da opacidade
-let currentOpacity = 1;
+// Estado da opacidade
+let currentOpacity = 1.0;
 
 /**
- * Aplica um valor de opacidade ao elemento alvo
- * e atualiza todas as interfaces dependentes.
+ * Mapeia o valor da opacidade (0.0 a 1.0) para a temperatura da piscina
+ * Faixa: 20°C (fria/desligada) até 32°C (máxima)
  */
 function applyOpacity(value) {
-  // Clamp entre 0 e 1
   currentOpacity = Math.max(0, Math.min(1, value));
 
-  // Atualiza o elemento visual
+  // Aplica transparência ao gradiente térmico
   fadeTarget.style.opacity = currentOpacity;
 
-  // Atualiza labels
-  const formatted = currentOpacity.toFixed(2);
-  targetLabel.textContent = formatted;
-  sliderValueDisp.textContent = formatted;
-  opacitySlider.value = Math.round(currentOpacity * 100);
+  // Cálculo da temperatura simulada
+  const temp = (20 + currentOpacity * 12).toFixed(1);
+  targetLabel.textContent = `${temp}°C`;
 
-  // Atualiza o painel de código
-  renderCode();
+  // Atualiza rótulo do estado da água
+  if (currentOpacity >= 0.8) {
+    statusLabel.textContent = "Aquecimento Máximo";
+  } else if (currentOpacity >= 0.3) {
+    statusLabel.textContent = "Modo ECO / Manutenção";
+  } else {
+    statusLabel.textContent = "Água Fria / Repouso";
+  }
+
+  // Atualiza controles da interface
+  const percentage = Math.round(currentOpacity * 100);
+  sliderValueDisp.textContent = `${percentage}% (${currentOpacity.toFixed(2)})`;
+  opacitySlider.value = percentage;
+
+  renderCode(temp);
 }
 
 /**
- * Renderiza o snippet CSS no painel de código vivo,
- * com syntax highlighting manual via spans.
+ * Atualiza o código CSS no painel
  */
-function renderCode() {
+function renderCode(currentTemp) {
   const opacity = currentOpacity.toFixed(2);
-  const transitionDuration = '0.6s';
+  const duration = '1.5s'; // Tempo simulado de inércia térmica
 
-  // Código "cru" para copiar
   const rawCode =
-`.fade-target {
-  opacity: ${opacity};
-  transition: opacity ${transitionDuration} ease-in-out;
+`/* Circuito de Aquecimento da Piscina */
+.circuito-termico {
+  opacity: ${opacity}; /* Temp. Atual: ${currentTemp}°C */
+  transition: opacity ${duration} ease-in-out;
   will-change: opacity;
 }
 
-/* Fórmula de interpolação:
-   Opacity(t) = ${currentOpacity > 0.5 ? '1.00' : '0.00'} + (${opacity} - ${currentOpacity > 0.5 ? '1.00' : '0.00'}) × f(t) */`;
+/* Estado: ${currentOpacity > 0.5 ? 'Bomba Ativa' : 'Standby / Resfriando'} */`;
 
-  // Versão com syntax highlighting
   const highlighted =
-`<span class="tok-sel">.fade-target</span> <span class="tok-punc">{</span>
+`<span class="tok-com">/* Circuito Térmico — Temp: ${currentTemp}°C */</span>
+<span class="tok-sel">.circuito-termico</span> <span class="tok-punc">{</span>
   <span class="tok-prop">opacity</span><span class="tok-punc">:</span> <span class="tok-num">${opacity}</span><span class="tok-punc">;</span>
-  <span class="tok-prop">transition</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span> <span class="tok-num">${transitionDuration}</span> <span class="tok-val">ease-in-out</span><span class="tok-punc">;</span>
+  <span class="tok-prop">transition</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span> <span class="tok-num">${duration}</span> <span class="tok-val">ease-in-out</span><span class="tok-punc">;</span>
   <span class="tok-prop">will-change</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span><span class="tok-punc">;</span>
 <span class="tok-punc">}</span>
 
-<span class="tok-com">/* Fórmula de interpolação:
-   Opacity(t) = Opacity_inicial + (Opacity_final - Opacity_inicial) × f(t) */</span>`;
+<span class="tok-com">/* Inércia Térmica:
+   Fade In  = Ligar aquecedor (20°C → 32°C)
+   Fade Out = Resfriamento (32°C → 20°C) */</span>`;
 
   codeOutput.innerHTML = highlighted;
-
-  // Armazena o código puro para o botão copiar
   btnCopy.dataset.raw = rawCode;
 }
 
 /**
- * Animação programática de fade com easing.
- * Usa requestAnimationFrame para suavidade.
+ * Animação da inércia térmica via JavaScript
  */
-function animateOpacity(from, to, duration = 600) {
+function animateOpacity(from, to, duration = 1500) {
   const start = performance.now();
 
-  // Curva ease-in-out (cubic bezier simplificada)
   const easeInOut = t => t < 0.5
     ? 2 * t * t
     : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -102,57 +104,51 @@ function animateOpacity(from, to, duration = 600) {
   requestAnimationFrame(step);
 }
 
-/* =========================================================
-   EVENT LISTENERS
-   ========================================================= */
+/* EVENT LISTENERS */
 
-// Slider: atualiza opacidade em tempo real
+// Slider Modo ECO
 opacitySlider.addEventListener('input', (e) => {
-  // Desabilita transição CSS durante drag para resposta imediata
   fadeTarget.style.transition = 'none';
   applyOpacity(e.target.value / 100);
-  // Restaura transição no próximo frame
   requestAnimationFrame(() => {
-    fadeTarget.style.transition = 'opacity 0.6s ease-in-out';
+    fadeTarget.style.transition = 'opacity 1.5s ease-in-out';
   });
 });
 
-// Botão Fade In
+// Ligar (Fade In)
 btnFadeIn.addEventListener('click', () => {
   animateOpacity(currentOpacity, 1);
 });
 
-// Botão Fade Out
+// Desligar (Fade Out)
 btnFadeOut.addEventListener('click', () => {
   animateOpacity(currentOpacity, 0);
 });
 
-// Botão Toggle
+// Toggle Ciclo
 btnToggle.addEventListener('click', () => {
   const target = currentOpacity > 0.5 ? 0 : 1;
   animateOpacity(currentOpacity, target);
 });
 
-// Botão Reset
+// Modo Capa Térmica (Reset para 0.5 - conservação de temperatura)
 btnReset.addEventListener('click', () => {
-  animateOpacity(currentOpacity, 1);
+  animateOpacity(currentOpacity, 0.5);
 });
 
-// Botão Copiar código
+// Copiar código
 btnCopy.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(btnCopy.dataset.raw);
     const original = btnCopy.textContent;
     btnCopy.textContent = '✓ Copiado';
     btnCopy.style.color = 'var(--success)';
-    btnCopy.style.borderColor = 'var(--success)';
     setTimeout(() => {
       btnCopy.textContent = original;
       btnCopy.style.color = '';
-      btnCopy.style.borderColor = '';
     }, 1500);
   } catch (err) {
-    console.error('Falha ao copiar:', err);
+    console.error('Erro ao copiar:', err);
   }
 });
 
