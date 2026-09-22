@@ -8,27 +8,61 @@ const codeOutput       = document.getElementById('codeOutput');
 const btnFadeIn        = document.getElementById('btnFadeIn');
 const btnFadeOut       = document.getElementById('btnFadeOut');
 const btnToggle        = document.getElementById('btnToggle');
-const btnReset         = document.getElementById('btnReset');
 const btnCopy          = document.getElementById('btnCopy');
+const chkCapaTermica   = document.getElementById('chkCapaTermica');
+const logList          = document.getElementById('logList');
 
-// Estado da opacidade
+// Elementos de Telemetria
+const valConsumo       = document.getElementById('valConsumo');
+const valEficiencia    = document.getElementById('valEficiencia');
+const valTempo         = document.getElementById('valTempo');
+
+// Estado
 let currentOpacity = 1.0;
+let transitionDurationSec = 1.5;
 
 /**
- * Mapeia o valor da opacidade (0.0 a 1.0) para a temperatura da piscina
- * Faixa: 20°C (fria/desligada) até 32°C (máxima)
+ * Adiciona uma mensagem ao histórico de logs
+ */
+function addLog(msg) {
+  const time = new Date().toLocaleTimeString('pt-BR', { minute: '2-digit', second: '2-digit' });
+  const li = document.createElement('li');
+  li.textContent = `[${time}] ${msg}`;
+  logList.prepend(li);
+  if (logList.children.length > 5) logList.removeChild(logList.lastChild);
+}
+
+/**
+ * Atualiza a duração da transição com base na Capa Térmica
+ */
+function updateTransitionSpeed() {
+  const temCapa = chkCapaTermica.checked;
+  // Capa térmica mantém o calor: transição de resfriamento é mais longa (3.0s)
+  transitionDurationSec = temCapa ? 3.0 : 1.0;
+  fadeTarget.style.transition = `opacity ${transitionDurationSec}s ease-in-out`;
+}
+
+/**
+ * Mapeia opacidade para temperatura, consumo elétrico e telemetria
  */
 function applyOpacity(value) {
   currentOpacity = Math.max(0, Math.min(1, value));
 
-  // Aplica transparência ao gradiente térmico
+  // Aplica transparência
   fadeTarget.style.opacity = currentOpacity;
 
-  // Cálculo da temperatura simulada
+  // Cálculos de Telemetria
   const temp = (20 + currentOpacity * 12).toFixed(1);
-  targetLabel.textContent = `${temp}°C`;
+  const consumoKW = (currentOpacity * 6.0).toFixed(1);
+  const eficiencia = chkCapaTermica.checked ? Math.round(85 + currentOpacity * 12) : Math.round(60 + currentOpacity * 20);
+  const tempoMin = Math.round((1 - currentOpacity) * 45);
 
-  // Atualiza rótulo do estado da água
+  // Atualização Visual
+  targetLabel.textContent = `${temp}°C`;
+  valConsumo.textContent = `${consumoKW} kW`;
+  valEficiencia.textContent = `${eficiencia}%`;
+  valTempo.textContent = `${tempoMin} min`;
+
   if (currentOpacity >= 0.8) {
     statusLabel.textContent = "Aquecimento Máximo";
   } else if (currentOpacity >= 0.3) {
@@ -37,7 +71,6 @@ function applyOpacity(value) {
     statusLabel.textContent = "Água Fria / Repouso";
   }
 
-  // Atualiza controles da interface
   const percentage = Math.round(currentOpacity * 100);
   sliderValueDisp.textContent = `${percentage}% (${currentOpacity.toFixed(2)})`;
   opacitySlider.value = percentage;
@@ -46,21 +79,19 @@ function applyOpacity(value) {
 }
 
 /**
- * Atualiza o código CSS no painel
+ * Renderiza o código CSS adaptado com os parâmetros ativos
  */
 function renderCode(currentTemp) {
   const opacity = currentOpacity.toFixed(2);
-  const duration = '1.5s'; // Tempo simulado de inércia térmica
+  const duration = `${transitionDurationSec.toFixed(1)}s`;
 
   const rawCode =
-`/* Circuito de Aquecimento da Piscina */
+`/* Circuito de Aquecimento — PoolHeat v2.0 */
 .circuito-termico {
-  opacity: ${opacity}; /* Temp. Atual: ${currentTemp}°C */
+  opacity: ${opacity}; /* Temp: ${currentTemp}°C */
   transition: opacity ${duration} ease-in-out;
   will-change: opacity;
-}
-
-/* Estado: ${currentOpacity > 0.5 ? 'Bomba Ativa' : 'Standby / Resfriando'} */`;
+}`;
 
   const highlighted =
 `<span class="tok-com">/* Circuito Térmico — Temp: ${currentTemp}°C */</span>
@@ -70,27 +101,24 @@ function renderCode(currentTemp) {
   <span class="tok-prop">will-change</span><span class="tok-punc">:</span> <span class="tok-val">opacity</span><span class="tok-punc">;</span>
 <span class="tok-punc">}</span>
 
-<span class="tok-com">/* Inércia Térmica:
-   Fade In  = Ligar aquecedor (20°C → 32°C)
-   Fade Out = Resfriamento (32°C → 20°C) */</span>`;
+<span class="tok-com">/* Capa Térmica: ${chkCapaTermica.checked ? 'Ativa (Perda lenta)' : 'Inativa (Perda rápida)'} */</span>`;
 
   codeOutput.innerHTML = highlighted;
   btnCopy.dataset.raw = rawCode;
 }
 
 /**
- * Animação da inércia térmica via JavaScript
+ * Animação da inércia térmica via JS
  */
-function animateOpacity(from, to, duration = 1500) {
+function animateOpacity(from, to) {
   const start = performance.now();
+  const durationMs = transitionDurationSec * 1000;
 
-  const easeInOut = t => t < 0.5
-    ? 2 * t * t
-    : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
   function step(now) {
     const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
+    const progress = Math.min(elapsed / durationMs, 1);
     const eased = easeInOut(progress);
     const value = from + (to - from) * eased;
 
@@ -104,36 +132,61 @@ function animateOpacity(from, to, duration = 1500) {
   requestAnimationFrame(step);
 }
 
-/* EVENT LISTENERS */
+/* LISTENERS DE EVENTOS */
 
-// Slider Modo ECO
-opacitySlider.addEventListener('input', (e) => {
-  fadeTarget.style.transition = 'none';
-  applyOpacity(e.target.value / 100);
-  requestAnimationFrame(() => {
-    fadeTarget.style.transition = 'opacity 1.5s ease-in-out';
+// Presets Rápidos
+document.querySelectorAll('.btn-preset').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+    const targetBtn = e.currentTarget;
+    targetBtn.classList.add('active');
+
+    const targetTemp = parseFloat(targetBtn.dataset.temp);
+    const targetOpacity = (targetTemp - 20) / 12;
+
+    addLog(`Preset selecionado: ${targetTemp}°C`);
+    updateTransitionSpeed();
+    animateOpacity(currentOpacity, targetOpacity);
   });
 });
 
-// Ligar (Fade In)
+// Switch Capa Térmica
+chkCapaTermica.addEventListener('change', () => {
+  const estaAtiva = chkCapaTermica.checked;
+  updateTransitionSpeed();
+  addLog(`Capa térmica ${estaAtiva ? 'aplicada' : 'removida'}.`);
+  applyOpacity(currentOpacity);
+});
+
+// Slider
+opacitySlider.addEventListener('input', (e) => {
+  fadeTarget.style.transition = 'none';
+  applyOpacity(e.target.value / 100);
+});
+
+opacitySlider.addEventListener('change', () => {
+  updateTransitionSpeed();
+  addLog(`Potência ajustada manualmente para ${Math.round(currentOpacity * 100)}%`);
+});
+
+// Botões principais
 btnFadeIn.addEventListener('click', () => {
+  addLog('Comando: Ligar Aquecedor (Fade In)');
+  updateTransitionSpeed();
   animateOpacity(currentOpacity, 1);
 });
 
-// Desligar (Fade Out)
 btnFadeOut.addEventListener('click', () => {
+  addLog('Comando: Desligar Aquecedor (Fade Out)');
+  updateTransitionSpeed();
   animateOpacity(currentOpacity, 0);
 });
 
-// Toggle Ciclo
 btnToggle.addEventListener('click', () => {
   const target = currentOpacity > 0.5 ? 0 : 1;
+  addLog(`Comando: Alternar para ${target === 1 ? 'Ligado' : 'Desligado'}`);
+  updateTransitionSpeed();
   animateOpacity(currentOpacity, target);
-});
-
-// Modo Capa Térmica (Reset para 0.5 - conservação de temperatura)
-btnReset.addEventListener('click', () => {
-  animateOpacity(currentOpacity, 0.5);
 });
 
 // Copiar código
@@ -153,4 +206,5 @@ btnCopy.addEventListener('click', async () => {
 });
 
 // Inicialização
-applyOpacity(1);
+updateTransitionSpeed();
+applyOpacity(1.0);

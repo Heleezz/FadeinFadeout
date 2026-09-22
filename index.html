@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Simulador interativo de aquecimento de piscina usando transições de opacidade em CSS." />
-  <title>PoolHeat Lab — Simulador de Aquecimento & Fade CSS</title>
+  <title>PoolHeat Lab — Simulador Avançado de Aquecimento</title>
 
-  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,12 +19,13 @@
     <div class="container">
       <div class="logo">
         <div class="logo-mark">🔥</div>
-        <span>Pool<span class="gradient-text">Heat</span></span>
+        <span>Pool<span class="gradient-text">Heat</span> <small class="version-tag">v2.0</small></span>
       </div>
       <ul class="nav-links">
         <li><a href="#playground">Simulador</a></li>
+        <li><a href="#telemetry">Telemetria</a></li>
         <li><a href="#code">Código CSS</a></li>
-        <li><a href="#didactic">Conceitos Térmicos</a></li>
+        <li><a href="#didactic">Conceitos</a></li>
       </ul>
     </div>
   </nav>
@@ -35,7 +35,7 @@
     <div class="container">
       <div class="hero-badge fade-up">
         <span class="dot"></span>
-        <span>Automação · Inércia Térmica · Transição CSS</span>
+        <span>Automação · Inércia Térmica · Telemetria em Tempo Real</span>
       </div>
       <h1 class="fade-up delay-1">
         Simulador de Aquecimento:<br>
@@ -43,7 +43,7 @@
       </h1>
       <p class="fade-up delay-2">
         Aprenda como a propriedade <code style="font-family: var(--font-mono); color: var(--accent-2);">opacity</code> 
-        pode representar o ciclo de aquecimento e resfriamento gradual da água da piscina em tempo real.
+        simula o ciclo térmico, consumo de energia e retração de calor com capas térmicas.
       </p>
       <a href="#playground" class="hero-cta fade-up delay-3">
         Iniciar Simulação
@@ -56,20 +56,54 @@
   <section id="playground">
     <div class="container">
       <div class="section-label">Painel de Controle Térmico</div>
-      <h2>Simule a temperatura da piscina em <span class="gradient-text">tempo real</span></h2>
-      <p style="color: var(--text-1); max-width: 640px; margin-bottom: 3rem;">
-        Ative a bomba de calor (Fade In) para aquecer a água ou desligue o sistema (Fade Out) para simular o resfriamento. Ajuste o modo ECO manualmente pelo slider.
+      <h2>Simule a temperatura e <span class="gradient-text">telemetria</span></h2>
+      <p style="color: var(--text-1); max-width: 640px; margin-bottom: 2.5rem;">
+        Selecione um modo de uso rápido, ative a capa térmica para alterar a velocidade do Fade Out ou controle a potência manualmente.
       </p>
+
+      <!-- PRESETS RÁPIDOS -->
+      <div class="preset-container">
+        <span class="preset-label">Modos Rápidos:</span>
+        <button class="btn-preset" data-temp="20">
+          <span>❄️</span> Econômico (20°C)
+        </button>
+        <button class="btn-preset" data-temp="26">
+          <span>🏊</span> Natação (26°C)
+        </button>
+        <button class="btn-preset" data-temp="29">
+          <span>☀️</span> Conforto (29°C)
+        </button>
+        <button class="btn-preset" data-temp="32">
+          <span>♨️</span> Spa / Hydro (32°C)
+        </button>
+      </div>
 
       <div class="playground">
         <!-- Coluna esquerda: Preview + Controles -->
         <div class="card">
           <div class="card-title">Piscina — Visão Térmica</div>
 
-          <div class="preview-area">
+          <div class="preview-area" id="previewArea">
+            <div class="water-waves"></div>
             <div class="fade-target" id="fadeTarget">
               <span id="targetLabel">32.0°C</span>
               <small id="statusLabel" style="font-size: 0.75rem; font-weight: 400; display: block; opacity: 0.9;">Aquecida</small>
+            </div>
+          </div>
+
+          <!-- MÉTRAMAS DE TELEMETRIA -->
+          <div class="telemetry-grid" id="telemetry">
+            <div class="telemetry-card">
+              <span class="telemetry-title">Consumo Estimado</span>
+              <span class="telemetry-value" id="valConsumo">6.0 kW</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-title">Eficiência Térmica</span>
+              <span class="telemetry-value" id="valEficiencia">95%</span>
+            </div>
+            <div class="telemetry-card">
+              <span class="telemetry-title">Tempo p/ Alvo</span>
+              <span class="telemetry-value" id="valTempo">0 min</span>
             </div>
           </div>
 
@@ -83,9 +117,18 @@
             <button class="btn primary" id="btnToggle">
               <span>⇄</span> Alternar Ciclo
             </button>
-            <button class="btn" id="btnReset">
-              <span>↺</span> Capa Térmica
-            </button>
+          </div>
+
+          <!-- CONTROLE DE CAPA TÉRMICA -->
+          <div class="toggle-group">
+            <label class="switch-container">
+              <input type="checkbox" id="chkCapaTermica" checked />
+              <span class="switch-slider"></span>
+            </label>
+            <div class="toggle-info">
+              <strong>Capa Térmica Aplicada</strong>
+              <small style="color: var(--text-2); display: block;">Aumenta o tempo de transição (Fade Out mais lento/suave)</small>
+            </div>
           </div>
 
           <div class="slider-group">
@@ -97,17 +140,27 @@
           </div>
         </div>
 
-        <!-- Coluna direita: Código Vivo -->
-        <div class="code-panel" id="code">
-          <div class="code-header">
-            <div class="code-dots">
-              <span></span><span></span><span></span>
+        <!-- Coluna direita: Código Vivo + Log -->
+        <div class="code-column">
+          <div class="code-panel" id="code">
+            <div class="code-header">
+              <div class="code-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="code-filename">pool-heating.css</span>
+              <button class="code-copy" id="btnCopy">Copiar</button>
             </div>
-            <span class="code-filename">pool-heating.css</span>
-            <button class="code-copy" id="btnCopy">Copiar</button>
+            <div class="code-body">
+              <pre id="codeOutput"></pre>
+            </div>
           </div>
-          <div class="code-body">
-            <pre id="codeOutput"></pre>
+
+          <!-- LOG DE EVENTOS -->
+          <div class="log-panel">
+            <div class="log-header">Histórico do Sistema</div>
+            <ul class="log-list" id="logList">
+              <li>[00:00] Sistema inicializado em 32.0°C.</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -118,13 +171,9 @@
   <section id="didactic">
     <div class="container">
       <div class="section-label">Conceitos Aplicados ao Sistema</div>
-      <h2> opacity vs visibility vs <span class="gradient-text">display</span> no Aquecimento</h2>
-      <p style="color: var(--text-1); max-width: 720px;">
-        Entenda como utilizar a propriedade correta no desenvolvimento de dashboards de automação residencial.
-      </p>
+      <h2>opacity vs visibility vs <span class="gradient-text">display</span> no Aquecimento</h2>
 
       <div class="comparison-grid">
-        <!-- opacity -->
         <div class="prop-card opacity-card">
           <h3>opacity: 0 a 1</h3>
           <p>Representa a inércia térmica. Transição suave entre a piscina fria e aquecida.</p>
@@ -135,7 +184,6 @@
           </ul>
         </div>
 
-        <!-- visibility -->
         <div class="prop-card visibility-card">
           <h3>visibility: hidden</h3>
           <p>Sensor de temperatura em estado de repouso. O espaço no painel é preservado.</p>
@@ -146,7 +194,6 @@
           </ul>
         </div>
 
-        <!-- display -->
         <div class="prop-card display-card">
           <h3>display: none</h3>
           <p>Módulo de aquecimento solar desativado ou ausente na instalação física.</p>
@@ -162,7 +209,7 @@
 
   <footer>
     <div class="container">
-      <p>PoolHeat Lab · Automação e Transições CSS · <a href="#playground">Voltar ao topo</a></p>
+      <p>PoolHeat Lab v2.0 · Automação e Transições CSS · <a href="#playground">Voltar ao topo</a></p>
     </div>
   </footer>
 
